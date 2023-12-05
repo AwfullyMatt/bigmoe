@@ -1,18 +1,19 @@
-mod moe;
+pub mod ian;
+pub mod metronome;
+pub mod moe;
 
+use crate::ian::IanPlugin;
+use crate::metronome::MetronomePlugin;
 use crate::moe::MoePlugin;
 use bevy::prelude::*;
 use bevy_framepace::FramepacePlugin;
-use seldom_pixel::prelude::px_layer;
-use seldom_pixel::PxPlugin;
 
 pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_state::<GameState>()
-            .add_plugins(PxPlugin::<Layers>::new(SCREENRATIO, PALETTEMAIN.into()))
-            .add_plugins(MoePlugin)
-            .add_plugins(FramepacePlugin);
+            .add_state::<SongState>()
+            .add_plugins((MoePlugin, IanPlugin, FramepacePlugin, MetronomePlugin));
     }
 }
 
@@ -22,13 +23,12 @@ pub enum GameState {
     #[default]
     Playing,
 }
-
-#[derive(Reflect)]
-#[px_layer]
-pub enum Layers {
+#[derive(States, Clone, Copy, Debug, Default, Eq, Hash, PartialEq, Reflect)]
+pub enum SongState {
     #[default]
-    Default,
-    Moe(usize),
+    Stopped,
+    Playing,
+    Paused,
 }
 
 // constants

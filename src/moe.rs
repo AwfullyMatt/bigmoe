@@ -1,59 +1,55 @@
-use crate::{GameState, Layers};
+use crate::GameState;
 use bevy::prelude::*;
-use seldom_pixel::prelude::*;
+use leafwing_input_manager::prelude::*;
 
 pub struct MoePlugin;
 impl Plugin for MoePlugin {
     fn build(&self, app: &mut App) {
-        app.add_state::<Moed>()
-            .add_systems(OnEnter(GameState::Playing), (spawn_moe, spawn_big_moe));
+        app.add_plugins(InputManagerPlugin::<MoeAction>::default())
+            .init_resource::<ActionState<MoeAction>>()
+            .insert_resource(MoeAction::moe_input_map())
+            .add_state::<Moed>()
+            .add_systems(OnEnter(GameState::Playing), spawn_moe);
     }
 }
 
-#[derive(States, Clone, Copy, Debug, Default, Eq, Hash, PartialEq, Reflect)]
+#[derive(States, Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 pub enum Moed {
     #[default]
-    Regular,
-    Big,
+    Minor,
+    Major,
 }
 
-#[derive(States, Clone, Copy, Debug, Default, Eq, Hash, PartialEq, Reflect)]
-pub enum Mode {
-    One,   // Major
-    Two,   // Natural Minor
-    Three, // Dorian -- like minor but not as intense, a bit groovier
-}
-fn spawn_moe(mut commands: Commands, mut sprites: PxAssets<PxSprite>) {
-    let sprite = sprites.load_animated(MOE, 1);
-    commands.spawn((
-        PxSpriteBundle::<Layers> {
-            sprite,
-            position: PxPosition::from(IVec2 { x: 24, y: 81 }),
-            layer: Layers::Moe(0),
-            ..default()
-        },
-        PxAnimationBundle {
-            on_finish: PxAnimationFinishBehavior::Loop,
-            ..default()
-        },
-    ));
+#[derive(Actionlike, PartialEq, Eq, Clone, Copy, Hash, Debug, Reflect)]
+pub enum MoeAction {
+    Attack,
+    Defend,
+    Pause,
 }
 
-fn spawn_big_moe(mut commands: Commands, mut sprites: PxAssets<PxSprite>) {
-    let sprite = sprites.load_animated(BIGMOE, 1);
-    commands.spawn((
-        PxSpriteBundle::<Layers> {
-            sprite,
-            position: PxPosition::from(IVec2 { x: 240, y: 81 }),
-            layer: Layers::Moe(0),
-            ..default()
-        },
-        PxAnimationBundle {
-            on_finish: PxAnimationFinishBehavior::Loop,
-            ..default()
-        },
-    ));
+impl MoeAction {
+    fn moe_input_map() -> InputMap<MoeAction> {
+        InputMap::new([
+            (UserInput::from(MouseButton::Right), Self::Defend),
+            (UserInput::from(MouseButton::Left), Self::Attack),
+        ])
+    }
 }
 
-const MOE: &str = "sprite/moe.png";
-const BIGMOE: &str = "sprite/bigmoe.png";
+fn spawn_moe() {
+    // let sprite = sprites.load_animated(MOE, 1);
+    // commands.spawn((
+    //     Name::from("Moe"),
+    //     PxSpriteBundle::<Layers> {
+    //         sprite,
+    //         position: PxPosition::from(IVec2 { x: 24, y: 81 }),
+    //         layer: Layers::Moe(0),
+    //         ..default()
+    //     },
+    //     PxAnimationBundle {
+    //         on_finish: PxAnimationFinishBehavior::Loop,
+    //         ..default()
+    //     },
+    // ));
+    // info!("Spawned Moe!");
+}

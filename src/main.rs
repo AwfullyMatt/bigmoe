@@ -12,9 +12,9 @@ fn main() {
                 mode: WindowMode::Windowed,
                 position: WindowPosition::Centered(MonitorSelection::Index(2)),
                 resolution: Vec2::new(1920.0, 1080.0).into(),
-                title: "big moe".to_string(), // ToDo
-                resizable: false,             // does not stop programmatic resize
-                decorations: true,            // close, min, max, etc.
+                title: "minor moe".to_string(), // ToDo
+                resizable: false,               // does not stop programmatic resize
+                decorations: true,              // close, min, max, etc.
                 ..default()
             }),
             ..default()
