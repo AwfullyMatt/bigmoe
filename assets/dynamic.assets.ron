@@ -1,0 +1,25 @@
+({
+    "minormoe": File (
+        path: "sprite/minormoe.png",
+    ),
+    "majormoe": File (
+        path: "sprite/majormoe.png",
+    ),
+    "ian": File (
+        path: "sprite/ian.png",
+    ),
+    "title": TextureAtlas (
+        path: "sprite/title.png",
+        tile_size_x: 192.,
+        tile_size_y: 108.,
+        columns: 1,
+        rows: 17,
+    ),
+    "titlesleep": TextureAtlas (
+        path: "sprite/titlesleep.png",
+        tile_size_x: 192.,
+        tile_size_y: 108.,
+        columns: 1,
+        rows: 8,
+    ),
+})
